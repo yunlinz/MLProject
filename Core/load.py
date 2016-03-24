@@ -1,5 +1,6 @@
 import os
 import json
+from business import Business
 
 
 def split_business_by_state(infile, outfile=None):
@@ -72,7 +73,6 @@ def get_restaurants(business_file, outfile=None):
                 jline = json.loads(line)
                 if 'Restaurants' in jline['categories']:
                     o.write(line)
-
 
 if __name__ == '__main__':
     data_dir = '../data/'
