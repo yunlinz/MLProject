@@ -69,6 +69,8 @@ class BusinessAggregator:
             if v.get_attribute(attribtue) is None:
                 self.aggr.pop(k, None)
 
+    def __iter__(self):
+        return self.aggr.itervalues()
 '''
 Business object
 fields:
@@ -99,10 +101,15 @@ class Business:
         self.reviews.append(rvw)
 
     def get_attribute(self, attribute):
-        self.metadata['attributes'].fetch(attribute, None)
+        if attribute in self.metadata['attributes']:
+            return self.metadata['attributes'][attribute]
+        else:
+            return None
 
     def __iter__(self):
         return iter(self.reviews)
 
     def __str__(self):
         return json.dumps(self.metadata) + '|' + '|'.join(map(json.dumps, self.reviews)) + '\n'
+
+

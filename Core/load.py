@@ -1,8 +1,11 @@
 import os
 import json
 from business import Business
+import modeldata as md
 
-
+'''
+Takes as input a file with a business info on each line and splits it into separate files for each state
+'''
 def split_business_by_state(infile, outfile=None):
     if outfile is None:
         outfile = infile
@@ -20,7 +23,10 @@ def split_business_by_state(infile, outfile=None):
         v.close()
 
 
-def get_reviews_for_state(businesses, reviews, outfile=None):
+'''
+Takes a file with a set of businesses and reviews, save a set of reviews that only relevant to the businesses
+'''
+def get_reviews_for_businesses(businesses, reviews, outfile=None):
     if outfile is None:
         outfile = businesses + '_reviews'
     b_ids = []
@@ -38,7 +44,9 @@ def get_reviews_for_state(businesses, reviews, outfile=None):
                 if b_id in b_set:
                     o.write(line)
 
-
+'''
+Based on a business file, output a file with all possible attributes and values
+'''
 def get_attributes(business_file, outfile=None):
     if outfile is None:
         outfile = business_file + '_attributes'
@@ -63,7 +71,9 @@ def get_attributes(business_file, outfile=None):
         for k, v in attr_hash.iteritems():
             o.write(k + str(v) + '\n')
 
-
+'''
+Reads a business file and get only restaurants
+'''
 def get_restaurants(business_file, outfile=None):
     if outfile is None:
         outfile = business_file + '_restaurants'
@@ -78,12 +88,17 @@ if __name__ == '__main__':
     data_dir = '../data/'
     parsed_dir = data_dir + 'parsed/'
     raw_dir = data_dir + 'yelp_data/'
-
+    '''
+    some setting up
+    '''
     raw_reviews = raw_dir + 'yelp_academic_dataset_review.json'
     business_data = raw_dir + 'yelp_academic_dataset_business.json'
     split_business_by_state(business_data, outfile=parsed_dir + 'businesses')
     get_restaurants('../data/parsed/businesses_WI')
-    get_reviews_for_state(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
+    get_reviews_for_businesses(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
     get_attributes('../data/yelp_data/yelp_academic_dataset_business.json', '../data/parsed/attributes')
-
+    '''
+    Creates a bag of words representation based on the WI restaurants and reviews
+    '''
+    bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews')
     # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
