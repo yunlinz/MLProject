@@ -91,14 +91,16 @@ if __name__ == '__main__':
     '''
     some setting up
     '''
-    raw_reviews = raw_dir + 'yelp_academic_dataset_review.json'
-    business_data = raw_dir + 'yelp_academic_dataset_business.json'
-    split_business_by_state(business_data, outfile=parsed_dir + 'businesses')
-    get_restaurants('../data/parsed/businesses_WI')
-    get_reviews_for_businesses(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
-    get_attributes('../data/yelp_data/yelp_academic_dataset_business.json', '../data/parsed/attributes')
+    #raw_reviews = raw_dir + 'yelp_academic_dataset_review.json'
+    #business_data = raw_dir + 'yelp_academic_dataset_business.json'
+    #split_business_by_state(business_data, outfile=parsed_dir + 'businesses')
+    #get_restaurants('../data/parsed/businesses_WI')
+    #get_reviews_for_businesses(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
+    #get_attributes('../data/yelp_data/yelp_academic_dataset_business.json', '../data/parsed/attributes')
     '''
     Creates a bag of words representation based on the WI restaurants and reviews
     '''
-    bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews')
+    bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants',
+                                         parsed_dir + 'businesses_WI_restaurants_reviews')
+    bag_of_words.make_sparse_datamtrix()
     # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')

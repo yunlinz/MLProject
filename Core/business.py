@@ -70,7 +70,7 @@ class BusinessAggregator:
                 self.aggr.pop(k, None)
 
     def __iter__(self):
-        return self.aggr.itervalues()
+        return self.aggr.iteritems()
 '''
 Business object
 fields:
