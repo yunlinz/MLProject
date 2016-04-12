@@ -118,8 +118,13 @@ class BagOfWords(DataSet):
         # loops through the set of attributes that we should look for in this business and add it to the attribute list
         for a in self.attributes:
             attr = business.get_attribute(a)
+            if(attr == None):
+                attr = 0
             this_attribute.append(attr)
-        self.labels.append(this_attribute)
+        if(len(this_attribute) == 1):
+            self.labels.append(this_attribute[0])
+        else:
+            self.labels.append(this_attribute)
         all_words = []
         all_stars = []
         # tokenize all reviews and add the star values to the respective lists
