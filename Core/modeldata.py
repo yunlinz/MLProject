@@ -1,16 +1,18 @@
 import json
 import nltk
 import business
-
+import scipy.sparse as sp
 DEBUG = True
 
 '''
-Statis function for creating a bag of words data set based on a business file and a review file
-'''
-def create_bag_of_wods(businessfile, reviewfile, attribute=None):
-    # Creates a BusinessAggregator object and iterate through to add each business to the dataset
-    ba = business.BusinessAggregator(businessfile, reviewfile)
+    Statis function for creating a bag of words data set based on a business file and a review file
+    '''
+def create_bag_of_wods(ba_aggr, attribute=None):
+    #Creates a BusinessAggregator object and iterate through to add each business to the dataset
+    #ba = business.BusinessAggregator()
+    #ba.aggr = ba_aggr
     bag_of_words = BagOfWords()
+    
     if attribute is None:
         bag_of_words.add_attribute('Caters')
     elif isinstance(attribute, str):
@@ -20,37 +22,39 @@ def create_bag_of_wods(businessfile, reviewfile, attribute=None):
             bag_of_words.add_attribute(a)
     else:
         raise Exception('Invalid attribute data type!!!')
-    for b in iter(ba):
+        
+    for  b in ba_aggr.values():
+        #print ('Processing business Id: {}'.format(bid))
         bag_of_words.add_datapoint(b)
-    if DEBUG:
-        print str(bag_of_words)
     return bag_of_words
 
 
 class DataSet:
     """
-    DataSet abstract class that has functions that child classes can inherit
-    """
-
+        DataSet abstract class that has functions that child classes can inherit
+        """
+    
     '''
-    Initialize 4 fields for the class
-    attributes: list of items in the attributes dict in the business metadata to look for (d attributes)
-    labels: list of list of labels for the attributes dimension is n x d
-    features: list of dict of features in sparse representation using dicts n x ???
-    stars: list of list of star ratings from the reviews n x r (reviews)
-    '''
+        Initialize 4 fields for the class
+        attributes: list of items in the attributes dict in the business metadata to look for (d attributes)
+        labels: list of list of labels for the attributes dimension is n x d
+        features: list of dict of features in sparse representation using dicts n x ???
+        stars: list of list of star ratings from the reviews n x r (reviews)
+        '''
     def __init__(self):
         self.attributes = []
         self.labels = []
-        self.features = []
+        self.features_dict = []
         self.stars = []
-
+        self.vocabulary = {}
+        self.datamatrix = None
+    
     '''
-    Adds another attribute for the dataset builder to look for, will fail if we have already built a dataset
-    '''
+        Adds another attribute for the dataset builder to look for, will fail if we have already built a dataset
+        '''
     def add_attribute(self, attribute):
-        if not len(self.features) == 0:
-            print 'Already created dataset, cannot add more attributes!!!'
+        if not len(self.features_dict) == 0:
+            print ('Already created dataset, cannot add more attributes!!!')
         else:
             if attribute not in self.attributes:
                 self.attributes.append(attribute)
@@ -61,37 +65,55 @@ class DataSet:
     def check_data(self):
         l_attributes = len(self.attributes)
         l_labels = len(self.labels)
-        l_features = len(self.features)
+        l_features = len(self.features_dict)
         l_stars = len(self.stars)
         if not l_attributes == l_labels or not l_labels == l_features or not l_features == l_stars:
-            print Exception('Data lengths do not match!')
+            print (Exception('Data lengths do not match!'))
             return False
         return True
-
+    
     def __str__(self):
         if not self.check_data():
             return 'Bad data!'
         output = ''
         output += str(self.attributes) + ':stars:features\n'
         for i in range(len(self.attributes)):
-            output += str(self.labels) + ':' + str(self.stars) + ':' + str(self.features) + '\n'
+            output += str(self.labels) + ':' + str(self.stars) + ':' + str(self.features_dict) + '\n'
         return output
-
+    
     '''
-    Reads a business object and add as a datapoint. This will vary from one representation to the next, so this should
-    be overridden in child implementations
-    '''
+        Reads a business object and add as a datapoint. This will vary from one representation to the next, so this should
+        be overridden in child implementations
+        '''
     def add_datapoint(self, business):
         raise NotImplementedError('Please override in child class!!!')
-
+    
+    def make_sparse_datamtrix(self, mat_maker=sp.csr_matrix):
+        indptr = [0]
+        indices = []
+        data = []
+        for doc in self.features_dict:
+            for feature, value in doc.items():
+                index = self.vocabulary.setdefault(feature, len(self.vocabulary))
+                indices.append(index)
+                data.append(value)
+            indptr.append(len(indices))
+        sparse_matrix = mat_maker((data, indices, indptr), dtype=float)
+        if DEBUG:
+            mat_rows = sparse_matrix.shape[0]
+            mat_cols = sparse_matrix.shape[1]
+            mat_size = mat_rows * mat_cols
+            print ('Size of the sparse matrix is: {} x {}'.format(mat_rows, mat_cols))
+            print ('Sparsity of data matrix is: {}'.format(float(sparse_matrix.nnz) / mat_size))
+        self.datamatrix = sparse_matrix
 
 
 class BagOfWords(DataSet):
     """
-    Bag of words class
-    Represents the data as dict of {word: count/total_words}
-    count is occurrence in all reviews for that restaurant and total_words is total words for those reviews
-    """
+        Bag of words class
+        Represents the data as dict of {word: count/total_words}
+        count is occurrence in all reviews for that restaurant and total_words is total words for those reviews
+        """
     def add_datapoint(self, business):
         this_attribute = []
         if not isinstance(business, type(business)):
@@ -118,7 +140,6 @@ class BagOfWords(DataSet):
             else:
                 this_bag[word] = 1
         # normalize bag of words by dividing by total words
-        for k in this_bag.iterkeys():
+        for k in iter(this_bag.keys()):
             this_bag[k] /= float(total_words)
-        self.features.append(this_bag)
-
+        self.features_dict.append(this_bag)

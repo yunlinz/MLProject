@@ -139,9 +139,10 @@ if __name__ == '__main__':
     '''
     Creates a bag of words representation based on the WI restaurants and reviews
     '''
-    #bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews', "Price Range")
-    #bag_of_words.make_sparse_datamtrix()
-    all_sets = split_data(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews', 2, 5)
+    all_sets = split_data(parsed_dir + 'businesses_WI_restaurants.json', parsed_dir + 'businesses_WI_restaurants_reviews.json', 2, 5)
+    bag_of_words = md.create_bag_of_wods(all_sets['train1'], "Price Range")
+    bag_of_words.make_sparse_datamtrix()
+
     #json_data = open(parsed_dir + 'businesses_WI_restaurants').read()
     #data = json.load(json_data)
  # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
