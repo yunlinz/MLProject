@@ -22,14 +22,9 @@ def create_bag_of_wods(ba_aggr, attribute=None):
             bag_of_words.add_attribute(a)
     else:
         raise Exception('Invalid attribute data type!!!')
-<<<<<<< HEAD
-    for bid, b in iter(ba):
-        print 'Processing business Id: {}'.format(bid)
-=======
         
     for  b in ba_aggr.values():
         #print ('Processing business Id: {}'.format(bid))
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
         bag_of_words.add_datapoint(b)
     return bag_of_words
 
@@ -53,23 +48,13 @@ class DataSet:
         self.stars = []
         self.vocabulary = {}
         self.datamatrix = None
-<<<<<<< HEAD
-
-    '''
-    Adds another attribute for the dataset builder to look for, will fail if we have already built a dataset
-=======
     
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
     '''
         Adds another attribute for the dataset builder to look for, will fail if we have already built a dataset
         '''
     def add_attribute(self, attribute):
         if not len(self.features_dict) == 0:
-<<<<<<< HEAD
-            print 'Already created dataset, cannot add more attributes!!!'
-=======
             print ('Already created dataset, cannot add more attributes!!!')
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
         else:
             if attribute not in self.attributes:
                 self.attributes.append(attribute)
@@ -102,21 +87,13 @@ class DataSet:
         '''
     def add_datapoint(self, business):
         raise NotImplementedError('Please override in child class!!!')
-<<<<<<< HEAD
-
-=======
     
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
     def make_sparse_datamtrix(self, mat_maker=sp.csr_matrix):
         indptr = [0]
         indices = []
         data = []
         for doc in self.features_dict:
-<<<<<<< HEAD
-            for feature, value in doc.iteritems():
-=======
             for feature, value in doc.items():
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
                 index = self.vocabulary.setdefault(feature, len(self.vocabulary))
                 indices.append(index)
                 data.append(value)
@@ -126,13 +103,8 @@ class DataSet:
             mat_rows = sparse_matrix.shape[0]
             mat_cols = sparse_matrix.shape[1]
             mat_size = mat_rows * mat_cols
-<<<<<<< HEAD
-            print 'Size of the sparse matrix is: {} x {}'.format(mat_rows, mat_cols)
-            print 'Sparsity of data matrix is: {}'.format(float(sparse_matrix.nnz) / mat_size)
-=======
             print ('Size of the sparse matrix is: {} x {}'.format(mat_rows, mat_cols))
             print ('Sparsity of data matrix is: {}'.format(float(sparse_matrix.nnz) / mat_size))
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
         self.datamatrix = sparse_matrix
 
 
@@ -171,7 +143,3 @@ class BagOfWords(DataSet):
         for k in iter(this_bag.keys()):
             this_bag[k] /= float(total_words)
         self.features_dict.append(this_bag)
-<<<<<<< HEAD
-
-=======
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289

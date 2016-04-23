@@ -128,14 +128,6 @@ if __name__ == '__main__':
     '''
     some setting up
     '''
-<<<<<<< HEAD
-    #raw_reviews = raw_dir + 'yelp_academic_dataset_review.json'
-    #business_data = raw_dir + 'yelp_academic_dataset_business.json'
-    #split_business_by_state(business_data, outfile=parsed_dir + 'businesses')
-    #get_restaurants('../data/parsed/businesses_WI')
-    #get_reviews_for_businesses(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
-    #get_attributes('../data/yelp_data/yelp_academic_dataset_business.json', '../data/parsed/attributes')
-=======
     ''' 
     raw_reviews = raw_dir + 'yelp_academic_dataset_review.json'
     business_data = raw_dir + 'yelp_academic_dataset_business.json'
@@ -143,22 +135,13 @@ if __name__ == '__main__':
     get_restaurants('../data/parsed/businesses_WI')
     get_reviews_for_businesses(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
     get_attributes('../data/yelp_data/yelp_academic_dataset_business.json', '../data/parsed/attributes')
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
     '''
     '''
     Creates a bag of words representation based on the WI restaurants and reviews
     '''
-<<<<<<< HEAD
-    bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants',
-                                         parsed_dir + 'businesses_WI_restaurants_reviews')
-    bag_of_words.make_sparse_datamtrix()
-    # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
-=======
-    all_sets = split_data(parsed_dir + 'businesses_WI_restaurants.json', parsed_dir + 'businesses_WI_restaurants_reviews.json', 2, 5)
-    bag_of_words = md.create_bag_of_wods(all_sets['train1'], "Price Range")
-    bag_of_words.make_sparse_datamtrix()
-
+    #bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews', "Price Range")
+    #bag_of_words.make_sparse_datamtrix()
+    all_sets = split_data(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews', 2, 5)
     #json_data = open(parsed_dir + 'businesses_WI_restaurants').read()
     #data = json.load(json_data)
  # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
->>>>>>> 7d9565a1c5ffaca8aa1d8893d0b8cb31aa742289
