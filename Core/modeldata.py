@@ -1,3 +1,4 @@
+import json
 import nltk
 import nltk.stem.snowball as sbstem
 import business
@@ -29,9 +30,11 @@ stemmer = sbstem.SnowballStemmer('english')
 '''
 Statis function for creating a bag of words data set based on a business file and a review file
 '''
-def create_bag_of_words(businessfile, reviewfile, attribute=None):
+def create_bag_of_wods(businessfile=None, reviewfile=None, ba_aggr=None, attribute=None):
     # Creates a BusinessAggregator object and iterate through to add each business to the dataset
-    ba = business.BusinessAggregator(businessfile, reviewfile)
+    if businessfile is not None and reviewfile is not None and ba_aggr is None:
+        ba = business.BusinessAggregator(businessfile, reviewfile)
+        ba_aggr = ba.aggr
     bag_of_words = BagOfWords()
     if attribute is None:
         bag_of_words.add_attribute('Caters')
@@ -43,7 +46,9 @@ def create_bag_of_words(businessfile, reviewfile, attribute=None):
     else:
         raise Exception('Invalid attribute data type!!!')
     for bid, b in iter(ba):
-        print 'Processing business: {}'.format(bid)
+        print 'Processing business Id: {}'.format(bid)
+    for  b in ba_aggr.values():
+        #print ('Processing business Id: {}'.format(bid))
         bag_of_words.add_datapoint(b)
     return bag_of_words
 
@@ -68,16 +73,16 @@ def create_bag_of_ngrams(businessfile, reviewfile, attribute=None, ngrams=3):
 
 class DataSet:
     """
-    DataSet abstract class that has functions that child classes can inherit
-    """
+        DataSet abstract class that has functions that child classes can inherit
+        """
 
     '''
-    Initialize 4 fields for the class
-    attributes: list of items in the attributes dict in the business metadata to look for (d attributes)
-    labels: list of list of labels for the attributes dimension is n x d
-    features: list of dict of features in sparse representation using dicts n x ???
-    stars: list of list of star ratings from the reviews n x r (reviews)
-    '''
+        Initialize 4 fields for the class
+        attributes: list of items in the attributes dict in the business metadata to look for (d attributes)
+        labels: list of list of labels for the attributes dimension is n x d
+        features: list of dict of features in sparse representation using dicts n x ???
+        stars: list of list of star ratings from the reviews n x r (reviews)
+        '''
     def __init__(self):
         self.attributes = []
         self.labels = []
@@ -162,6 +167,7 @@ class DataSet:
             else:
                 print sparse_matrix.toarray()[0:100, 0:100]
         self.datamatrix = sparse_matrix
+
 
 class BagOfWords(DataSet):
     """

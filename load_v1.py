@@ -2,8 +2,7 @@ import os
 import json
 from business import Business
 import modeldata as md
-import pickle
-import random as rd
+import random as rd 
 
 '''
 Takes as input a file with a business info on each line and splits it into separate files for each state
@@ -87,14 +86,14 @@ def get_restaurants(business_file, outfile=None):
                     o.write(line)
 '''
 number_set: 1-?
-train_weight: 1-9.
+train_weight: 1-9. 
 '''
 def split_data(businessfile, reviewfile, number_sets, train_weight):
     all_sets = {}
     for i  in range(1, number_sets+1):
         all_sets["train" + str(i)] = {}
         all_sets["test" + str(i)] = {}
-
+        
     with open(businessfile) as rst:
         for line in rst:
             jline = json.loads(line)
@@ -105,13 +104,13 @@ def split_data(businessfile, reviewfile, number_sets, train_weight):
                 dict_type = "test"
             else:
                 dict_type = "train"
-            dict_temp = {}
+            dict_temp = {}    
             if (dict_type + str(set_num)) in all_sets.keys():
-                dict_temp = all_sets[dict_type + str(set_num)]
+                dict_temp = all_sets[dict_type + str(set_num)] 
             dict_temp[b_id] = Business(jline)
             all_sets[dict_type + str(set_num)]  = dict_temp
-
-    all_keys = all_sets.keys()
+            
+    all_keys = all_sets.keys()            
     with open(reviewfile) as rvw:
         for line in rvw:
             jline = json.loads(line)
@@ -120,7 +119,7 @@ def split_data(businessfile, reviewfile, number_sets, train_weight):
                 if b_id in all_sets[i_dict].keys():
                     dict_temp = all_sets[i_dict]
                     dict_temp[b_id].add_review(jline)
-                    all_sets[i_dict]  = dict_temp
+                    all_sets[i_dict]  = dict_temp 
     return all_sets
 if __name__ == '__main__':
     data_dir = '../data/'
@@ -129,31 +128,20 @@ if __name__ == '__main__':
     '''
     some setting up
     '''
-    #raw_reviews = raw_dir + 'yelp_academic_dataset_review.json'
-    #business_data = raw_dir + 'yelp_academic_dataset_business.json'
-    #split_business_by_state(business_data, outfile=parsed_dir + 'businesses')
-    #get_restaurants('../data/parsed/businesses_WI')
-    #get_reviews_for_businesses(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
-    #get_attributes('../data/yelp_data/yelp_academic_dataset_business.json', '../data/parsed/attributes')
+    ''' 
+    raw_reviews = raw_dir + 'yelp_academic_dataset_review.json'
+    business_data = raw_dir + 'yelp_academic_dataset_business.json'
+    split_business_by_state(business_data, outfile=parsed_dir + 'businesses')
+    get_restaurants('../data/parsed/businesses_WI')
+    get_reviews_for_businesses(parsed_dir + 'businesses_WI_restaurants', raw_reviews)
+    get_attributes('../data/yelp_data/yelp_academic_dataset_business.json', '../data/parsed/attributes')
+    '''
     '''
     Creates a bag of words representation based on the WI restaurants and reviews
     '''
-    business_file = 'yelp_academic_dataset_business.json'
-    review_file = 'yelp_academic_dataset_review.json'
-    #bag_of_words = md.create_bag_of_wods(raw_dir + business_file,
-    #                                     raw_dir + review_file)
-    bag_of_ngrams = md.create_bag_of_ngrams(parsed_dir + 'WI_test_restaurants',
-                                           parsed_dir + 'WI_test_reviews')
-
-
-    bag_of_ngrams.make_sparse_datamtrix()
-    bag_of_ngrams.make_tfidf_matrix()
-
-    # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
-    all_sets = split_data(parsed_dir + 'businesses_WI_restaurants.json', parsed_dir + 'businesses_WI_restaurants_reviews.json', 2, 5)
-    bag_of_words = md.create_bag_of_wods(all_sets['train1'], "Price Range")
-    bag_of_words.make_sparse_datamtrix()
-
+    #bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews', "Price Range")
+    #bag_of_words.make_sparse_datamtrix()
+    all_sets = split_data(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews', 2, 5)
     #json_data = open(parsed_dir + 'businesses_WI_restaurants').read()
     #data = json.load(json_data)
  # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
