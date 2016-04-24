@@ -2,6 +2,7 @@ import os
 import json
 from business import Business
 import modeldata as md
+import pickle
 
 '''
 Takes as input a file with a business info on each line and splits it into separate files for each state
@@ -100,7 +101,15 @@ if __name__ == '__main__':
     '''
     Creates a bag of words representation based on the WI restaurants and reviews
     '''
-    bag_of_words = md.create_bag_of_wods(parsed_dir + 'businesses_WI_restaurants',
-                                         parsed_dir + 'businesses_WI_restaurants_reviews')
-    bag_of_words.make_sparse_datamtrix()
+    business_file = 'yelp_academic_dataset_business.json'
+    review_file = 'yelp_academic_dataset_review.json'
+    #bag_of_words = md.create_bag_of_wods(raw_dir + business_file,
+    #                                     raw_dir + review_file)
+    bag_of_ngrams = md.create_bag_of_ngrams(parsed_dir + 'WI_test_restaurants',
+                                           parsed_dir + 'WI_test_reviews')
+
+
+    bag_of_ngrams.make_sparse_datamtrix()
+    bag_of_ngrams.make_tfidf_matrix()
+
     # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')

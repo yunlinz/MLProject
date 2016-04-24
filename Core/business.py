@@ -45,11 +45,15 @@ class BusinessAggregator:
             for line in iter(rst):
                 jline = json.loads(line)
                 b_id = jline['business_id']
+                if 'Restaurants' not in jline['categories']:
+                    continue
                 self.aggr[b_id] = Business(jline)
         with open(review_file) as rvw:
             for line in iter(rvw):
                 jline = json.loads(line)
                 b_id = jline['business_id']
+                if not b_id in self.aggr:
+                    continue
                 self.aggr[b_id].add_review(jline)
 
     def add_business(self, business):
