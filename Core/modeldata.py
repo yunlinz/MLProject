@@ -30,31 +30,36 @@ stemmer = sbstem.SnowballStemmer('english')
 '''
 Statis function for creating a bag of words data set based on a business file and a review file
 '''
-def create_bag_of_wods(businessfile=None, reviewfile=None, ba_aggr=None, attribute=None):
+def create_bag_of_words(businessfile=None, reviewfile=None, ba_aggr=None, attribute=None):
+    return create_bag_of_ngrams(businessfile=businessfile,
+                                reviewfile=reviewfile,
+                                ba_aggr=ba_aggr,
+                                attribute=attribute,
+                                ngrams=1)
+    # Creates a BusinessAggregator object and iterate through to add each business to the dataset
+    # if businessfile is not None and reviewfile is not None and ba_aggr is None:
+    #     ba = business.BusinessAggregator(businessfile, reviewfile)
+    #     ba_aggr = ba.aggr
+    # bag_of_words = BagOfWords()
+    # if attribute is None:
+    #     bag_of_words.add_attribute('Caters')
+    # elif isinstance(attribute, str):
+    #     bag_of_words.add_attribute(attribute)
+    # elif isinstance(attribute, list):
+    #     for a in attribute:
+    #         bag_of_words.add_attribute(a)
+    # else:
+    #     raise Exception('Invalid attribute data type!!!')
+    # for b in ba_aggr.values():
+    #     bag_of_words.add_datapoint(b)
+    # return bag_of_words
+
+
+def create_bag_of_ngrams(businessfile=None, reviewfile=None, ba_aggr=None, attribute=None, ngrams=2):
     # Creates a BusinessAggregator object and iterate through to add each business to the dataset
     if businessfile is not None and reviewfile is not None and ba_aggr is None:
         ba = business.BusinessAggregator(businessfile, reviewfile)
         ba_aggr = ba.aggr
-    bag_of_words = BagOfWords()
-    if attribute is None:
-        bag_of_words.add_attribute('Caters')
-    elif isinstance(attribute, str):
-        bag_of_words.add_attribute(attribute)
-    elif isinstance(attribute, list):
-        for a in attribute:
-            bag_of_words.add_attribute(a)
-    else:
-        raise Exception('Invalid attribute data type!!!')
-    for bid, b in iter(ba):
-        print 'Processing business Id: {}'.format(bid)
-    for  b in ba_aggr.values():
-        #print ('Processing business Id: {}'.format(bid))
-        bag_of_words.add_datapoint(b)
-    return bag_of_words
-
-def create_bag_of_ngrams(businessfile, reviewfile, attribute=None, ngrams=3):
-    # Creates a BusinessAggregator object and iterate through to add each business to the dataset
-    ba = business.BusinessAggregator(businessfile, reviewfile)
     bag_of_ngrams = BagOfNgrams(n=ngrams)
     if attribute is None:
         bag_of_ngrams.add_attribute('Caters')
@@ -65,8 +70,7 @@ def create_bag_of_ngrams(businessfile, reviewfile, attribute=None, ngrams=3):
             bag_of_ngrams.add_attribute(a)
     else:
         raise Exception('Invalid attribute data type!!!')
-    for bid, b in iter(ba):
-        print 'Processing business: {}'.format(bid)
+    for b in ba_aggr.values():
         bag_of_ngrams.add_datapoint(b)
     return bag_of_ngrams
 
@@ -287,6 +291,7 @@ def simple_tokenizer(text):
     '''
     return nltk.tokenize.word_tokenize(text)
 
+
 def is_number(s):
     try:
         float(s)
@@ -294,10 +299,12 @@ def is_number(s):
     except ValueError:
         return False
 
+
 def is_pronoun(s):
     if s in pn_set:
         return True
     return False
+
 
 def create_general_token(word):
     if is_number(word):
