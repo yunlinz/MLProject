@@ -1,5 +1,5 @@
 import json
-
+import pickle
 '''
 Class for dealing with businesses
 '''
@@ -72,6 +72,10 @@ class BusinessAggregator:
         for k, v in self.aggr.iteritems():
             if v.get_attribute(attribtue) is None:
                 self.aggr.pop(k, None)
+
+    def dump(self, filename='ba_pickled'):
+        with open(filename, 'w') as f:
+            pickle.dump(self, f)
 
     def __iter__(self):
         return self.aggr.iteritems()

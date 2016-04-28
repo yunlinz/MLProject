@@ -145,23 +145,35 @@ if __name__ == '__main__':
     review_file = 'yelp_academic_dataset_review.json'
     #bag_of_words = md.create_bag_of_wods(raw_dir + business_file,
     #                                     raw_dir + review_file)
+
+
     bag_of_ngrams = md.create_bag_of_ngrams(parsed_dir + 'WI_test_restaurants',
                                            parsed_dir + 'WI_test_reviews')
 
 
-    bag_of_ngrams.make_sparse_datamtrix()
     bag_of_ngrams.make_tfidf_matrix()
+    print len(bag_of_ngrams.datamatrix.data)
+    print bag_of_ngrams.datamatrix.shape
 
+    print len(bag_of_ngrams.labels.data)
+    print bag_of_ngrams.labels.shape
+    exit()
     # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
-    all_sets = split_data(parsed_dir + 'businesses_WI_restaurants.json', parsed_dir + 'businesses_WI_restaurants_reviews.json', 2, 5)
-    bag_of_words = md.create_bag_of_wods(all_sets['train1'], "Price Range")
+    #all_sets = split_data(parsed_dir + 'businesses_WI_restaurants', parsed_dir + 'businesses_WI_restaurants_reviews', 2, 5)
+    #bag_of_words = md.create_bag_of_words(ba_aggr=all_sets['train1'], attribute="Price Range")
+    bag_of_words = md.create_bag_of_words(parsed_dir + 'businesses_WI_restaurants',
+                                           parsed_dir + 'businesses_WI_restaurants_reviews')
     bag_of_words.make_sparse_datamtrix()
+    bag_of_words.make_tfidf_matrix()
+    print len(bag_of_words.datamatrix.data)
+    print bag_of_words.datamatrix.shape
+    print bag_of_words.labels.shape
 
     #json_data = open(parsed_dir + 'businesses_WI_restaurants').read()
     #data = json.load(json_data)
  # get_reviews_for_state('../data/parsed/businesses_TX', '../data/yelp_data/yelp_academic_dataset_review.json')
  
-     '''
+    '''
     Used this for the development of the One Vs Rest model. Want to confer on architecture of program before I move things around
     Figured it'd either be like this or maybe Class setup that calls the method and prints out internally.
     '''

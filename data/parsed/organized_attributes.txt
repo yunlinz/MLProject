@@ -1,0 +1,63 @@
+Accepts Credit Cards	FALSE	TRUE		
+Accepts Insurance	FALSE			
+Ages Allowed	19plus	21plus	18plus	allages
+Alcohol	beer_and_wine	none	full_bar	
+Ambience|casual	FALSE	TRUE		
+Ambience|classy	FALSE	TRUE		
+Ambience|divey	FALSE	TRUE		
+Ambience|hipster	FALSE	TRUE		
+Ambience|intimate	FALSE	TRUE		
+Ambience|romantic	FALSE	TRUE		
+Ambience|touristy	FALSE	TRUE		
+Ambience|trendy	FALSE	TRUE		
+Ambience|upscale	FALSE	TRUE		
+Attire	dressy	casual	formal	
+By Appointment Only	FALSE	TRUE		
+BYOB	FALSE	TRUE		
+BYOB/Corkage	yes_corkage	yes_free	no	
+Caters	FALSE	TRUE		
+Coat Check	FALSE	TRUE		
+Corkage	FALSE	TRUE		
+Delivery	FALSE	TRUE		
+Dietary Restrictions|dairy-free	FALSE	TRUE		
+Dietary Restrictions|gluten-free	FALSE	TRUE		
+Dietary Restrictions|halal	FALSE	TRUE		
+Dietary Restrictions|kosher	FALSE	TRUE		
+Dietary Restrictions|soy-free	FALSE	TRUE		
+Dietary Restrictions|vegan	FALSE	TRUE		
+Dietary Restrictions|vegetarian	FALSE	TRUE		
+Dogs Allowed	FALSE	TRUE		
+Drive-Thru	FALSE	TRUE		
+Good For Dancing	FALSE	TRUE		
+Good For Groups	FALSE	TRUE		
+Good for Kids	FALSE	TRUE		
+Good For|breakfast	FALSE	TRUE		
+Good For|brunch	FALSE	TRUE		
+Good For|dessert	FALSE	TRUE		
+Good For|dinner	FALSE	TRUE		
+Good For|latenight	FALSE	TRUE		
+Good For|lunch	FALSE	TRUE		
+Happy Hour	FALSE	TRUE		
+Has TV	FALSE	TRUE		
+Music|background_music	FALSE	TRUE		
+Music|dj	FALSE	TRUE		
+Music|jukebox	FALSE	TRUE		
+Music|karaoke	FALSE	TRUE		
+Music|live	FALSE	TRUE		
+Music|video	FALSE	TRUE		
+Noise Level	very_loud	average	loud	quiet
+Open 24 Hours	FALSE	TRUE		
+Order at Counter	FALSE	TRUE		
+Outdoor Seating	FALSE	TRUE		
+Parking|garage	FALSE	TRUE		
+Parking|lot	FALSE	TRUE		
+Parking|street	FALSE	TRUE		
+Parking|valet	FALSE	TRUE		
+Parking|validated	FALSE	TRUE		
+Price Range	1	2	3	4
+Smoking	yes	outdoor	no	
+Take-out	FALSE	TRUE		
+Takes Reservations	FALSE	TRUE		
+Waiter Service	FALSE	TRUE		
+Wheelchair Accessible	FALSE	TRUE		
+Wi-Fi	paid	free	no	

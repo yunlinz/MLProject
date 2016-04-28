@@ -24,11 +24,31 @@ def make_pronoun_set():
             pn.append(w)
     return set(pn)
 
+def make_attribute_vocab():
+    infile = '../data/parsed/organized_attributes.txt'
+    attributes_vocab = []
+    with open(infile) as f:
+        for l in iter(f):
+            split_l = l.split('\t')
+            attributes_vocab.append((split_l[0], {}))
+            for i in range(1, len(split_l)):
+                word = split_l[i].strip()
+                if word == '':
+                    continue
+                if word == 'TRUE':
+                    word = True
+                elif word == 'FALSE':
+                    word = False
+                attributes_vocab[-1][1][word] = i
+    return attributes_vocab
+
 cw_set = make_common_word_set()
 pn_set = make_pronoun_set()
 stemmer = sbstem.SnowballStemmer('english')
+attributes_vocab = make_attribute_vocab()
+
 '''
-Statis function for creating a bag of words data set based on a business file and a review file
+Static function for creating a bag of words data set based on a business file and a review file
 '''
 def create_bag_of_words(businessfile=None, reviewfile=None, ba_aggr=None, attribute=None):
     return create_bag_of_ngrams(businessfile=businessfile,
@@ -61,17 +81,17 @@ def create_bag_of_ngrams(businessfile=None, reviewfile=None, ba_aggr=None, attri
         ba = business.BusinessAggregator(businessfile, reviewfile)
         ba_aggr = ba.aggr
     bag_of_ngrams = BagOfNgrams(n=ngrams)
-    if attribute is None:
-        bag_of_ngrams.add_attribute('Caters')
-    elif isinstance(attribute, str):
+    if isinstance(attribute, str):
         bag_of_ngrams.add_attribute(attribute)
     elif isinstance(attribute, list):
         for a in attribute:
             bag_of_ngrams.add_attribute(a)
-    else:
+    elif attribute is not None:
         raise Exception('Invalid attribute data type!!!')
     for b in ba_aggr.values():
         bag_of_ngrams.add_datapoint(b)
+    bag_of_ngrams.make_sparse_attribute_matrix()
+    bag_of_ngrams.make_sparse_datamtrix()
     return bag_of_ngrams
 
 
@@ -89,13 +109,12 @@ class DataSet:
         '''
     def __init__(self):
         self.attributes = []
-        self.labels = []
+        self.labels = None
         self.features_dict = []
         self.stars = []
         self.vocabulary = {}
         self.datamatrix = None
         self.isTfIdf = False
-
 
     def make_tfidf_matrix(self, norm='l2', use_idf=True, smooth_idf=True, sublinear_tf=False):
         try:
@@ -172,7 +191,10 @@ class DataSet:
                 print sparse_matrix.toarray()[0:100, 0:100]
         self.datamatrix = sparse_matrix
 
-
+    def make_sparse_attribute_matrix(self, mat_maker=sp.csr_matrix):
+        self.labels = mat_maker(self.labels)
+'''
+This class is now obsolete due to Bag of 1-gram = Bag of words
 class BagOfWords(DataSet):
     """
     Bag of words class
@@ -216,7 +238,7 @@ class BagOfWords(DataSet):
         # for k in this_bag.iterkeys():
         #     this_bag[k] /= float(total_words)
         self.features_dict.append(this_bag)
-
+'''
 
 class BagOfNgrams(DataSet):
     def __init__(self, n):
@@ -224,14 +246,42 @@ class BagOfNgrams(DataSet):
         self.ngram = n
 
     def add_datapoint(self, business):
-        this_attribute = []
+        this_attribute = np.zeros((1, len(attributes_vocab)))
         if not isinstance(business, type(business)):
             return
         # loops through the set of attributes that we should look for in this business and add it to the attribute list
-        for a in self.attributes:
-            attr = business.get_attribute(a)
-            this_attribute.append(attr)
-        self.labels.append(this_attribute)
+        if len(self.attributes) == 0:
+            for idx, tup in enumerate(attributes_vocab):
+                attr = tup[0]
+                value = None
+                if '|' in attr:
+                    key1, key2 = attr.split('|')
+                    if key1 not in business.metadata['attributes']:
+                        continue
+                    elif key2 not in business.metadata['attributes'][key1]:
+                        continue
+                    else:
+                        value = business.metadata['attributes'][key1][key2]
+                else:
+                    if attr not in business.metadata['attributes']:
+                        continue
+                    else:
+                        value = business.metadata['attributes'][attr]
+                if value is None:
+                    continue
+                else:
+                    if type(value) is int:
+                        this_attribute[0, idx] = value
+                    else:
+                        this_attribute[0, idx] = tup[1][value]
+        else:
+            for a in self.attributes:
+                attr = business.get_attribute(a)
+                this_attribute.append(attr)
+        if self.labels is None:
+            self.labels = this_attribute
+        else:
+            self.labels = np.vstack((self.labels, this_attribute))
         all_words = []
         all_stars = []
         # tokenize all reviews and add the star values to the respective lists
