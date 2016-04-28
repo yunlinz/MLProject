@@ -11,13 +11,11 @@ Ambience|romantic	FALSE	TRUE
 Ambience|touristy	FALSE	TRUE		
 Ambience|trendy	FALSE	TRUE		
 Ambience|upscale	FALSE	TRUE		
-Attire	dressy	casual	formal	
-By Appointment Only	FALSE	TRUE		
+Attire	dressy	casual	formal
 BYOB	FALSE	TRUE		
 BYOB/Corkage	yes_corkage	yes_free	no	
 Caters	FALSE	TRUE		
-Coat Check	FALSE	TRUE		
-Corkage	FALSE	TRUE		
+Coat Check	FALSE	TRUE
 Delivery	FALSE	TRUE		
 Dietary Restrictions|dairy-free	FALSE	TRUE		
 Dietary Restrictions|gluten-free	FALSE	TRUE		
@@ -46,8 +44,6 @@ Music|karaoke	FALSE	TRUE
 Music|live	FALSE	TRUE		
 Music|video	FALSE	TRUE		
 Noise Level	very_loud	average	loud	quiet
-Open 24 Hours	FALSE	TRUE		
-Order at Counter	FALSE	TRUE		
 Outdoor Seating	FALSE	TRUE		
 Parking|garage	FALSE	TRUE		
 Parking|lot	FALSE	TRUE		
